@@ -1,0 +1,31 @@
+{
+  "name": "connectfour",
+  "version": "1.0.0",
+  "description": "A simple connect four app using TypeScript Socket.io React and Redux",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "TypeScript",
+    "Sockets",
+    "React",
+    "Redux"
+  ],
+  "author": "DDRosario",
+  "license": "ISC",
+  "devDependencies": {
+    "awesome-typescript-loader": "^5.2.1",
+    "react": "^16.7.0",
+    "react-redux": "^6.0.0",
+    "source-map-loader": "^0.2.4",
+    "typescript": "^3.2.2",
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  }
+}
