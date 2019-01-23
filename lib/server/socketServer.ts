@@ -6,12 +6,14 @@ export class socketServer {
   public app: express.Application;
   private http: Server;
   private io: socketIo.Server;
+  private rooms: number;
   public readonly PORT: number = 3005;
 
   constructor() {
     this.app = express();
     this.http = createServer(this.app);
     this.io = socketIo(this.http);
+    this.rooms = 1;
     this.serverListen();
     this.listenForConnections();
   }
@@ -26,6 +28,7 @@ export class socketServer {
 
       socket.on('join', (username: String) => {
         console.log('User joined with username: ', username);
+        //have the user join a room
       });
     });
   }
