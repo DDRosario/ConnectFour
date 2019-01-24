@@ -1,7 +1,7 @@
 export class connectFour {
   public board: number[][];
-  public player1: number;
-  public player2: number;
+  public readonly player1: number;
+  public readonly player2: number;
   private turn: boolean;
 
   constructor() {
@@ -43,28 +43,18 @@ export class connectFour {
     let winner: number = 0;
     //check rows
     this.board.forEach((row: number[]) => {
-      let localWinner: number = this.checkRow(row);
-      if (localWinner === 1 || localWinner === 2) {
-        winner = localWinner;
-      }
+      winner = winner || this.checkRow(row);
     });
-
     //check columns
     for (let col = 0; col < this.board.length; col++) {
       let column: number[] = [];
       for (let row = 0; row < this.board.length; row++) {
         column.push(this.board[row][col]);
       }
-      let localWinner: number = this.checkRow(column);
-      if (localWinner === 1 || localWinner === 2) {
-        winner = localWinner;
-      }
+      winner = winner || this.checkRow(column);
     }
-
-    //check diagnals
-    //TODO
     //returns 0 if no winner
-    return winner;
+    return winner || this.checkMinorDiagonals() || this.checkMajorDiagonals();
   }
   private checkRow(row: number[]): number {
     let player: number = row[0];
@@ -83,5 +73,23 @@ export class connectFour {
     }
     //returns 0 if no win
     return 0;
+  }
+  private checkMajorDiagonals(): number {
+    let player: number = 0;
+    let count: number = 0;
+    //start at the 0 column
+    let col: number = 0;
+    let row: number = this.board.length - 1;
+    do {
+      player = this.board[row][col];
+    } while (row >= 0 && col <= this.board[0].length);
+    //start at row 5
+    //increment both till off board
+    //keep count
+    return player;
+  }
+  private checkMinorDiagonals(): number {
+    let player: number = 0;
+    return player;
   }
 }
