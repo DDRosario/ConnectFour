@@ -1,3 +1,8 @@
+enum player {
+  none = 0,
+  player1 = 1,
+  player2 = 2
+}
 export class connectFour {
   public board: number[][];
   public readonly player1: number;
@@ -13,8 +18,8 @@ export class connectFour {
       [0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0]
     ];
-    this.player1 = 1;
-    this.player2 = 2;
+    this.player1 = player.player1;
+    this.player2 = player.player2;
     this.turn = true;
   }
   private toggleTurn(): void {
@@ -39,8 +44,8 @@ export class connectFour {
     }
     return placed;
   }
-  public checkWin(): number {
-    let winner: number = 0;
+  public checkWin(): player {
+    let winner: player = 0;
     //check rows
     this.board.forEach((row: number[]) => {
       winner = winner || this.checkRow(row);
@@ -56,23 +61,23 @@ export class connectFour {
     //returns 0 if no winner
     return winner || this.checkMinorDiagonals() || this.checkMajorDiagonals();
   }
-  private checkRow(row: number[]): number {
-    let player: number = row[0];
+  private checkRow(row: number[]): player {
+    let piece: player = row[0];
     let count: number = 1;
     for (let i = 1; i < row.length; i++) {
-      if (player === row[i]) {
+      if (piece === row[i]) {
         count++;
       }
       if (count === 4) {
-        return player;
+        return piece;
       }
-      if (player !== row[i]) {
+      if (piece !== row[i]) {
         count = 1;
       }
-      player = row[i];
+      piece = row[i];
     }
     //returns 0 if no win
-    return 0;
+    return player.none;
   }
   private checkMajorDiagonals(): number {
     let player: number = 0;
