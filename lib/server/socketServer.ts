@@ -3,10 +3,10 @@ import { createServer, Server } from 'http';
 import * as socketIo from 'socket.io';
 import { connectFour } from './gameLogic';
 
-declare interface Rooms {
+interface Rooms {
   [roomId: string]: gameRoom;
 }
-declare interface gameRoom {
+interface gameRoom {
   numPlayers: number;
   game?: connectFour;
 }
@@ -34,25 +34,37 @@ export class socketServer {
     this.io.on('connection', (socket: socketIo.Socket) => {
       console.log(socket.id + ' has connected');
 
-      socket.on('join', (username: string) => {
+      socket.on('enter username', (username: string) => {
         console.log('User joined with username: ', username);
         //have the user join a room
-        let room: string = 'room1';
-        socket.join(room);
-        this.rooms[room] = {
-          numPlayers: this.rooms[room].numPlayers
-            ? this.rooms[room].numPlayers + 1
-            : 1
-        };
-        socket.on('start game', () => {
-          const game: connectFour = this.startGame(room);
-          socket.to(room).emit('new game');
+        socket.on('join room', (roomName: string) => {
+          roomName = this.joinRoom(socket, roomName);
+          this.io.in(roomName).emit('joined', username);
+
+          socket.on('start game', () => {
+            const game: connectFour = this.startGame(roomName);
+            socket.to(roomName).emit('new game');
+          });
         });
       });
     });
   }
-  private startGame(room: string): connectFour {
-    this.rooms[room].game = new connectFour();
-    return this.rooms[room].game;
+  private joinRoom(socket: socketIo.Socket, roomName: string): string {
+    if (roomName.length === 0) {
+      //need to join a default room
+      //TODO UPDATE TO PICK A NONE FULL ROOM
+      roomName = 'room1';
+    }
+    socket.join(roomName);
+    this.rooms[roomName] = {
+      numPlayers: this.rooms[roomName].numPlayers
+        ? this.rooms[roomName].numPlayers + 1
+        : 1
+    };
+    return roomName;
+  }
+  private startGame(roomName: string): connectFour {
+    this.rooms[roomName].game = new connectFour();
+    return this.rooms[roomName].game;
   }
 }

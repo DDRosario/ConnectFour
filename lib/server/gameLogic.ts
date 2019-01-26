@@ -8,7 +8,6 @@ export class connectFour {
   public readonly player1: number;
   public readonly player2: number;
   private turn: boolean;
-
   constructor() {
     this.board = [
       [0, 0, 0, 0, 0, 0, 0],
@@ -25,7 +24,6 @@ export class connectFour {
   private toggleTurn(): void {
     this.turn = !this.turn;
   }
-
   public getTurn(): number {
     return this.turn ? this.player1 : this.player2;
   }
@@ -79,8 +77,8 @@ export class connectFour {
     //returns 0 if no win
     return player.none;
   }
-  private checkMajorDiagonals(): number {
-    let player: number = 0;
+  private checkMajorDiagonals(): player {
+    let player: player = 0;
     let count: number = 0;
     //start at the 0 column
     let col: number = 0;
@@ -93,8 +91,8 @@ export class connectFour {
     //keep count
     return player;
   }
-  private checkMinorDiagonals(): number {
-    let player: number = 0;
+  private checkMinorDiagonals(): player {
+    let player: player = 0;
     return player;
   }
 }

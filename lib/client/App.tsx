@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { UsernameForm } from './components/UsernameForm';
+
 export interface AppProps {}
 
 export class App extends React.Component<AppProps> {
@@ -8,11 +10,11 @@ export class App extends React.Component<AppProps> {
   }
   componentDidMount(): void {}
 
-  render() {
+  render(): JSX.Element {
     return (
       <span>
-        <div />
-        <div>Hello from React</div>
+        <h1>MVP ConnectFour</h1>
+        <UsernameForm />
       </span>
     );
   }
