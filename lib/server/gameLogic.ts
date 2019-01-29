@@ -5,8 +5,8 @@ enum player {
 }
 export class connectFour {
   public board: number[][];
-  public readonly player1: number;
-  public readonly player2: number;
+  public readonly player1: player;
+  public readonly player2: player;
   private turn: boolean;
   constructor() {
     this.board = [
@@ -24,7 +24,7 @@ export class connectFour {
   private toggleTurn(): void {
     this.turn = !this.turn;
   }
-  public getTurn(): number {
+  public getTurn(): player {
     return this.turn ? this.player1 : this.player2;
   }
   public placeMove(column: number): boolean {
@@ -35,12 +35,32 @@ export class connectFour {
       if (this.board[row][column] === 0) {
         this.board[row][column] = currentPlayer;
         placed = true;
+        this.check(row, column); //set a variable to let know game is done
         this.toggleTurn();
         //change current player if we were able to place a piece
         break;
       }
     }
     return placed;
+  }
+  public check(row: number, col: number) {
+    //check the row
+    var count: number = 0;
+    var winner: player = this.checkRow(this.board[row]);
+    if (winner !== player.none) {
+      return winner;
+    }
+    //check the column
+    var column: number[] = [];
+    for (let i = 0; i < this.board.length; row++) {
+      column.push(this.board[i][col]);
+    }
+    winner = this.checkRow(column);
+    if (winner !== player.none) {
+      return winner;
+    }
+    //check the major diagonal
+    //check the minor diagonal
   }
   public checkWin(): player {
     let winner: player = 0;
