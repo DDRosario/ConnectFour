@@ -9,8 +9,8 @@ class App {
   constructor() {
     this.app = express();
     this.config();
-    this.serveStatic();
     this.socketServer = new socketServer();
+    this.serveStatic();
   }
   //Apply middleware
   private config(): void {
@@ -19,7 +19,7 @@ class App {
   }
   //Serve static files
   private serveStatic(): void {
-    this.app.use(express.static(__dirname + '/../static'));
+    this.app.use(express.static(__dirname + '/../../static'));
   }
   //Router
 }

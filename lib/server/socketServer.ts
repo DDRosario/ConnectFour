@@ -2,7 +2,6 @@ import * as express from 'express';
 import { createServer, Server } from 'http';
 import * as socketIo from 'socket.io';
 import { connectFour } from './gameLogic';
-
 interface Rooms {
   [roomId: string]: gameRoom;
 }
@@ -43,11 +42,28 @@ export class socketServer {
           roomName = this.joinRoom(socket, roomName);
           this.io.in(roomName).emit('joined', username);
 
-          socket.on('start game', () => {
-            const game: connectFour = this.startGame(roomName);
-            socket.to(roomName).emit('new game');
+          socket.on('ready', () => {
+            if (this.rooms[roomName].numPlayers > 1) {
+              console.log('game started');
+              const game: connectFour = this.startGame(roomName);
+              this.io
+                .to(roomName)
+                .emit('get board', JSON.stringify(game.getBoard()));
+
+              socket.on('placed move', (column: string) => {
+                game.placeMove(parseInt(column));
+                this.io
+                  .to(roomName)
+                  .emit('get board', JSON.stringify(game.getBoard()));
+              });
+            }
           });
         });
+      });
+
+      socket.on('disconnect', () => {
+        console.log('socket disconnect', socket.rooms);
+        // console.log(this.io.sockets.rooms);
       });
     });
   }
@@ -62,11 +78,12 @@ export class socketServer {
       }
     }
     socket.join(roomName);
+    console.log(roomName);
     this.rooms[roomName] = {
-      numPlayers: this.rooms[roomName].numPlayers
-        ? this.rooms[roomName].numPlayers + 1
-        : 1
+      numPlayers: this.rooms[roomName] ? this.rooms[roomName].numPlayers + 1 : 1
     };
+    // console.log(this.io.sockets.rooms);
+    console.log(this.rooms[roomName], socket.rooms);
     return roomName;
   }
   private startGame(roomName: string): connectFour {

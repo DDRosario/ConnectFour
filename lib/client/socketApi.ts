@@ -17,9 +17,14 @@ export class SocketApi {
     this.socket.emit('join room', roomName);
   }
   public listenForGame(cb: Function) {
-    this.socket.on('new game', () => {
-      cb();
+    this.socket.emit('ready', 'true');
+    this.socket.on('get board', (board: string) => {
+      cb(JSON.parse(board));
     });
+  }
+  public placeMove(column: string, cb: Function) {
+    this.socket.emit('placed move', column);
+    // this.socket.on('update board', )
   }
   public listenForJoined(cb: Function) {
     this.socket.on('joined', (username: string) => {

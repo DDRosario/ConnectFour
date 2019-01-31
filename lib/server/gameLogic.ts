@@ -27,6 +27,9 @@ export class connectFour {
   public getTurn(): player {
     return this.turn ? this.player1 : this.player2;
   }
+  public getBoard(): number[][] {
+    return this.board;
+  }
   public placeMove(column: number): boolean {
     //return false if could not place the piece
     let placed: boolean = false;
@@ -35,7 +38,7 @@ export class connectFour {
       if (this.board[row][column] === 0) {
         this.board[row][column] = currentPlayer;
         placed = true;
-        this.check(row, column); //set a variable to let know game is done
+        // this.check(row, column); //set a variable to let know game is done
         this.toggleTurn();
         //change current player if we were able to place a piece
         break;
