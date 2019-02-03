@@ -28,7 +28,7 @@ export class GameBoard extends React.Component<Props, {}> {
   render() {
     return (
       <span>
-        <div>
+        <div className="gameBoard">
           {this.props.board.map((row, i) => {
             return (
               <BoardRow row={row} key={i} placeMove={this.props.placeMove} />

@@ -11,7 +11,12 @@ enum cell {
 export interface AppProps {}
 export interface State {
   board: cell[][];
+  room: string;
+  player: cell;
+  user: string;
+  numberOfPlayers: number;
   loggedIn: boolean;
+  turn: boolean;
 }
 
 export class App extends React.Component<AppProps, {}> {
@@ -20,12 +25,26 @@ export class App extends React.Component<AppProps, {}> {
   constructor(props: AppProps) {
     super(props);
     this.state = {
-      board: [[0], [0]],
-      loggedIn: true
+      board: [
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0]
+      ],
+      loggedIn: false,
+      room: '',
+      player: 0,
+      user: '',
+      numberOfPlayers: 0,
+      turn: false
     };
     this.socket = new SocketApi();
     this.joinGame = this.joinGame.bind(this);
     this.placeMove = this.placeMove.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   joinGame(e: React.FormEvent): void {
@@ -37,14 +56,38 @@ export class App extends React.Component<AppProps, {}> {
     });
   }
   placeMove(e: React.MouseEvent, column: number) {
-    this.socket.placeMove('' + column, () => {});
+    if (this.state.turn) {
+      this.socket.placeMove('' + column, (turn: boolean) => {
+        this.setState({
+          turn
+        });
+      });
+    }
   }
-  componentDidMount(): void {
-    //TEMPORARY ENTER USERNAME DEFAULT TO DREW
-    this.socket.enterUsername('Drew', () => {
-      console.log('Added Drew as a username!');
+  /*Event Handlers*/
+  handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    this.socket.enterUsername(this.state.user, () => {
+      this.setState({
+        loggedIn: true
+      });
+      this.socket.joinRoom('TestRoom', (room: string) => {
+        this.setState({
+          room
+        });
+      });
     });
-    this.socket.joinRoom('TestRoom');
+  }
+  handleChange(e: React.FormEvent<HTMLInputElement>) {
+    this.setState({
+      user: e.currentTarget.value
+    });
+  }
+  /*Life Cycle*/
+  componentDidMount(): void {
+    this.socket.listenForTurn((turn: boolean) => {
+      this.setState({ turn });
+    });
   }
 
   render() {
@@ -52,15 +95,30 @@ export class App extends React.Component<AppProps, {}> {
       <span>
         <h1>MVP ConnectFour</h1>
         {!this.state.loggedIn ? (
-          <UsernameForm />
+          <UsernameForm
+            handleChange={this.handleChange}
+            handleSubmit={this.handleSubmit}
+          />
         ) : (
           <button
             onClick={(e: React.FormEvent) => {
               this.joinGame(e);
             }}
-          />
+            id="start"
+          >
+            Start Game
+          </button>
         )}
+        <div id="playerTurnRow" />
         <GameBoard board={this.state.board} placeMove={this.placeMove} />
+        <div>In room:{this.state.room}</div>
+        <div>
+          {this.state.numberOfPlayers < 2 && this.state.loggedIn ? (
+            <div>waiting for another player</div>
+          ) : (
+            <div />
+          )}
+        </div>
       </span>
     );
   }

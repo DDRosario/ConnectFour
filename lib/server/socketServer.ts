@@ -44,17 +44,19 @@ export class socketServer {
 
           socket.on('ready', () => {
             if (this.rooms[roomName].numPlayers > 1) {
-              console.log('game started');
               const game: connectFour = this.startGame(roomName);
               this.io
                 .to(roomName)
                 .emit('get board', JSON.stringify(game.getBoard()));
 
+              socket.emit('turn', true);
               socket.on('placed move', (column: string) => {
                 game.placeMove(parseInt(column));
                 this.io
                   .to(roomName)
                   .emit('get board', JSON.stringify(game.getBoard()));
+                socket.emit('turn', false);
+                socket.broadcast.emit('turn', true);
               });
             }
           });

@@ -11,15 +11,25 @@ export class SocketApi {
   }
   public enterUsername(username: string, cb: Function) {
     this.socket.emit('enter username', username);
+    cb();
     // this.loadListeners(cb)
   }
-  public joinRoom(roomName: string) {
+  public joinRoom(roomName: string, cb: Function) {
     this.socket.emit('join room', roomName);
+    cb(roomName);
+    this.socket.on('turn', (turn: boolean) => {
+      cb();
+    });
   }
   public listenForGame(cb: Function) {
     this.socket.emit('ready', 'true');
     this.socket.on('get board', (board: string) => {
       cb(JSON.parse(board));
+    });
+  }
+  public listenForTurn(cb: Function) {
+    this.socket.on('turn', (turn: boolean) => {
+      cb(turn);
     });
   }
   public placeMove(column: string, cb: Function) {

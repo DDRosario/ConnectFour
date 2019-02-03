@@ -19,7 +19,7 @@ export const BoardCell = (props: BoardCellProps) => {
         props.placeMove(e, props.column);
       }}
     >
-      <div id={`cell${props.cell}`}>{props.cell}</div>
+      <div id={`cell${props.cell}`} />
     </span>
   );
 };
