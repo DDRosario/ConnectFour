@@ -17,9 +17,10 @@ export class SocketApi {
   public joinRoom(roomName: string, cb: Function) {
     this.socket.emit('join room', roomName);
     cb(roomName);
-    this.socket.on('turn', (turn: boolean) => {
-      cb();
-    });
+  }
+  public placeMove(column: string, cb: Function) {
+    this.socket.emit('placed move', column);
+    // this.socket.on('update board', )
   }
   public listenForGame(cb: Function) {
     this.socket.emit('ready', 'true');
@@ -31,10 +32,6 @@ export class SocketApi {
     this.socket.on('turn', (turn: boolean) => {
       cb(turn);
     });
-  }
-  public placeMove(column: string, cb: Function) {
-    this.socket.emit('placed move', column);
-    // this.socket.on('update board', )
   }
   public listenForJoined(cb: Function) {
     this.socket.on('joined', (username: string) => {

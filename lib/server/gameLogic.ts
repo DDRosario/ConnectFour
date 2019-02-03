@@ -80,7 +80,7 @@ export class connectFour {
       winner = winner || this.checkRow(column);
     }
     //returns 0 if no winner
-    return winner || this.checkMinorDiagonals() || this.checkMajorDiagonals();
+    return winner;
   }
   private checkRow(row: number[]): player {
     let piece: player = row[0];
@@ -99,23 +99,5 @@ export class connectFour {
     }
     //returns 0 if no win
     return player.none;
-  }
-  private checkMajorDiagonals(): player {
-    let player: player = 0;
-    let count: number = 0;
-    //start at the 0 column
-    let col: number = 0;
-    let row: number = this.board.length - 1;
-    do {
-      player = this.board[row][col];
-    } while (row >= 0 && col <= this.board[0].length);
-    //start at row 5
-    //increment both till off board
-    //keep count
-    return player;
-  }
-  private checkMinorDiagonals(): player {
-    let player: player = 0;
-    return player;
   }
 }

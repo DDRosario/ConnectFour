@@ -110,6 +110,7 @@ export class App extends React.Component<AppProps, {}> {
           </button>
         )}
         <div id="playerTurnRow" />
+        {this.state.turn ? <div>Your Turn</div> : <div>Player 2's turn</div>}
         <GameBoard board={this.state.board} placeMove={this.placeMove} />
         <div>In room:{this.state.room}</div>
         <div>

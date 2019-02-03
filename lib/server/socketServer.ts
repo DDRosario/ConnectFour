@@ -89,7 +89,9 @@ export class socketServer {
     return roomName;
   }
   private startGame(roomName: string): connectFour {
-    this.rooms[roomName].game = new connectFour();
+    if (!this.rooms[roomName].game) {
+      this.rooms[roomName].game = new connectFour();
+    }
     return this.rooms[roomName].game;
   }
   private enqueue(roomName: string): void {
