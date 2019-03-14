@@ -66,7 +66,7 @@ export class connectFour {
     //check the minor diagonal
   }
   public checkWin(): player {
-    let winner: player = 0;
+    let winner: player = player.none;
     //check rows
     this.board.forEach((row: number[]) => {
       winner = winner || this.checkRow(row);
