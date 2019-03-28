@@ -48,7 +48,6 @@ export class connectFour {
   }
   public check(row: number, col: number) {
     //check the row
-    var count: number = 0;
     var winner: player = this.checkRow(this.board[row]);
     if (winner !== player.none) {
       return winner;
@@ -63,7 +62,39 @@ export class connectFour {
       return winner;
     }
     //check the major diagonal
+    var major: player[] = [];
+    var r = row;
+    var c = col;
+    while (r < this.board.length && c < this.board[0].length) {
+      r++;
+      c++;
+    }
+    while (r >= 0 && c >= 0) {
+      major.push(this.board[r][c]);
+      r--;
+      c--;
+    }
+    winner = this.checkRow(major);
+    if (winner !== player.none) {
+      return winner;
+    }
     //check the minor diagonal
+    var minor: player[] = [];
+    var r = row;
+    var c = col;
+    while (r < this.board.length && c >= 0) {
+      r++;
+      c--;
+    }
+    while (r >= 0 && c < this.board[0].length) {
+      minor.push(this.board[r][c]);
+      r--;
+      c++;
+    }
+    winner = this.checkRow(minor);
+    if (winner !== player.none) {
+      return winner;
+    }
   }
   public checkWin(): player {
     let winner: player = player.none;
